@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Para ti, Emily</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+        
         body {
             font-family: 'Arial', sans-serif;
             text-align: center;
-            background-color: #fdf6e3;
+            background: linear-gradient(to top, #ffcc80, #ffeb99, #ffffff);
             margin: 0;
             padding: 0;
             display: flex;
@@ -17,108 +19,138 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
+            position: relative;
+            animation: amanecer 10s infinite alternate;
         }
+        
+        @keyframes amanecer {
+            0% { background: linear-gradient(to top, #ffcc80, #ffeb99, #ffffff); }
+            100% { background: linear-gradient(to top, #ff9966, #ffcc80, #ffeb99); }
+        }
+        
         .text-container {
             background: rgba(255, 255, 255, 0.8);
-            padding: 20px;
+            padding: 40px;
             border-radius: 15px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            position: relative;
-            z-index: 10;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 600px;
+            z-index: 2;
+            animation: aparecerTexto 3s ease-in-out;
         }
+        
+        @keyframes aparecerTexto {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+        
         .field {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: flex-end;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
             width: 100%;
             height: 100vh;
             position: absolute;
-            bottom: 0;
+            top: 0;
+            left: 0;
+            padding: 50px;
+            align-content: center;
+            z-index: 1;
         }
+        
         .tulipan {
             position: relative;
-            width: 80px;
-            height: 120px;
-            margin: 10px;
+            width: 60px;
+            height: 100px;
             opacity: 0;
-            animation: crecer 6s forwards;
+            animation: crecer 6s forwards, brisa 3s infinite alternate ease-in-out;
         }
+        
         @keyframes crecer {
             0% { transform: scale(0.1) translateY(100px); opacity: 0; }
             50% { transform: scale(0.5) translateY(50px); opacity: 0.5; }
             100% { transform: scale(1) translateY(0); opacity: 1; }
         }
+        
+        @keyframes brisa {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(3deg); }
+        }
+        
         .petalo {
             position: absolute;
-            width: 30px;
-            height: 50px;
+            width: 25px;
+            height: 40px;
             background: #ffcc00;
             border-radius: 50% 50% 0 0;
             top: 0;
+            box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
         }
-        .petalo.izquierdo {
-            left: 5px;
-            transform: rotate(-15deg);
-        }
-        .petalo.centro {
-            left: 20px;
-        }
-        .petalo.derecho {
-            left: 35px;
-            transform: rotate(15deg);
-        }
+        
         .tallo {
             position: absolute;
-            width: 8px;
-            height: 70px;
+            width: 6px;
+            height: 60px;
             background: green;
-            left: 35px;
-            top: 50px;
+            left: 27px;
+            top: 40px;
         }
-        .hoja {
-            position: absolute;
-            width: 15px;
-            height: 30px;
-            background: green;
-            border-radius: 20px;
-            top: 70px;
-        }
-        .hoja.izquierda {
-            left: 15px;
-            transform: rotate(-30deg);
-        }
-        .hoja.derecha {
-            left: 50px;
-            transform: rotate(30deg);
-        }
+        
         h1 {
             color: #d4a017;
-            font-size: 2rem;
-            margin-top: 20px;
+            font-size: 3rem;
+            font-family: 'Great Vibes', cursive;
+            text-align: center;
         }
+        
         p {
             font-size: 1.5rem;
             color: #333;
+            text-align: center;
+        }
+        
+        @media (max-width: 600px) {
+            .text-container {
+                width: 90%;
+                padding: 20px;
+            }
+            .field {
+                grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+                grid-template-rows: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 5px;
+                padding: 20px;
+            }
+            .tulipan {
+                width: 50px;
+                height: 90px;
+            }
         }
     </style>
 </head>
 <body>
+    <audio autoplay loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-memories.mp3" type="audio/mp3">
+    </audio>
+    
     <div class="text-container">
         <h1>Para ti, Emily</h1>
         <p>Un campo de tulipanes para recordarte lo especial que eres.</p>
     </div>
+    
     <div class="field">
         <script>
-            for (let i = 0; i < 15; i++) {
+            for (let i = 0; i < 100; i++) {
                 document.write(`
                     <div class="tulipan" style="animation-delay: ${Math.random() * 3}s;">
-                        <div class="petalo izquierdo petalo"></div>
-                        <div class="petalo centro petalo"></div>
-                        <div class="petalo derecho petalo"></div>
+                        <div class="petalo" style="left: 3px; transform: rotate(-15deg);"></div>
+                        <div class="petalo" style="left: 15px;"></div>
+                        <div class="petalo" style="left: 27px; transform: rotate(15deg);"></div>
                         <div class="tallo"></div>
-                        <div class="hoja izquierda hoja"></div>
-                        <div class="hoja derecha hoja"></div>
                     </div>
                 `);
             }
