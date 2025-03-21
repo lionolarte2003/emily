@@ -49,17 +49,16 @@
         }
         
         .field {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
-            width: 100%;
-            height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-end;
             position: absolute;
+            width: 100vw;
+            height: 100vh;
             top: 0;
             left: 0;
-            padding: 50px;
-            align-content: center;
+            padding-bottom: 10vh;
             z-index: 1;
         }
         
@@ -69,6 +68,7 @@
             height: 100px;
             opacity: 0;
             animation: crecer 6s forwards, brisa 3s infinite alternate ease-in-out;
+            margin: 5px;
         }
         
         @keyframes crecer {
@@ -120,14 +120,11 @@
                 padding: 20px;
             }
             .field {
-                grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-                grid-template-rows: repeat(auto-fill, minmax(80px, 1fr));
-                gap: 5px;
-                padding: 20px;
+                padding-bottom: 5vh;
             }
             .tulipan {
-                width: 50px;
-                height: 90px;
+                width: 40px;
+                height: 80px;
             }
         }
     </style>
@@ -144,7 +141,7 @@
     
     <div class="field">
         <script>
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 80; i++) {
                 document.write(`
                     <div class="tulipan" style="animation-delay: ${Math.random() * 3}s;">
                         <div class="petalo" style="left: 3px; transform: rotate(-15deg);"></div>
