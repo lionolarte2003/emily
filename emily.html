@@ -49,24 +49,19 @@
         }
         
         .field {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: flex-end;
             position: absolute;
             width: 100vw;
             height: 100vh;
-            top: 0;
+            bottom: 0;
             left: 0;
             padding-bottom: 10vh;
             z-index: 1;
         }
         
         .tulipan {
-            position: relative;
+            position: absolute;
             opacity: 0;
             animation: crecer 6s forwards, brisa 3s infinite alternate ease-in-out;
-            margin: 10px;
         }
         
         @keyframes crecer {
@@ -76,43 +71,39 @@
         }
         
         @keyframes brisa {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(3deg); }
+            0% { transform: rotate(-2deg); }
+            100% { transform: rotate(2deg); }
         }
         
         .petalo {
             position: absolute;
             background: #ffcc00;
             border-radius: 50% 50% 0 0;
-            top: 0;
+            width: 25px;
+            height: 50px;
             box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
         }
         
         .tallo {
             position: absolute;
             background: green;
-            top: 40px;
+            width: 5px;
+            height: 60px;
         }
         
         h1 {
             color: #d4a017;
             font-size: 3rem;
             font-family: 'Great Vibes', cursive;
-            text-align: center;
         }
         
         p {
             font-size: 1.5rem;
             color: #333;
-            text-align: center;
         }
     </style>
 </head>
 <body>
-    <audio autoplay loop>
-        <source src="https://www.bensound.com/bensound-music/bensound-memories.mp3" type="audio/mp3">
-    </audio>
-    
     <div class="text-container">
         <h1>Para ti, Emily</h1>
         <p>Un campo de tulipanes para recordarte lo especial que eres.</p>
@@ -123,44 +114,34 @@
     <script>
         function crearTulipanes() {
             let field = document.getElementById("field");
-            field.innerHTML = ""; // Limpiar antes de agregar nuevos
-            let esMovil = window.innerWidth <= 600;
-            let cantidadTulipanes = esMovil ? 30 : 80;
-            let tamanoTulipan = esMovil ? 50 : 60;
-            let alturaTulipan = esMovil ? 90 : 100;
+            field.innerHTML = "";
+            let cantidadTulipanes = window.innerWidth <= 600 ? 20 : 50;
             
             for (let i = 0; i < cantidadTulipanes; i++) {
                 let tulipan = document.createElement("div");
                 tulipan.className = "tulipan";
-                tulipan.style.width = tamanoTulipan + "px";
-                tulipan.style.height = alturaTulipan + "px";
                 tulipan.style.animationDelay = Math.random() * 3 + "s";
+                tulipan.style.left = Math.random() * window.innerWidth + "px";
+                tulipan.style.bottom = Math.random() * (window.innerHeight * 0.5) + "px";
                 
                 let petalo1 = document.createElement("div");
                 petalo1.className = "petalo";
-                petalo1.style.width = tamanoTulipan * 0.4 + "px";
-                petalo1.style.height = alturaTulipan * 0.4 + "px";
-                petalo1.style.left = "3px";
+                petalo1.style.left = "5px";
                 petalo1.style.transform = "rotate(-15deg)";
                 
                 let petalo2 = document.createElement("div");
                 petalo2.className = "petalo";
-                petalo2.style.width = tamanoTulipan * 0.4 + "px";
-                petalo2.style.height = alturaTulipan * 0.4 + "px";
                 petalo2.style.left = "15px";
                 
                 let petalo3 = document.createElement("div");
                 petalo3.className = "petalo";
-                petalo3.style.width = tamanoTulipan * 0.4 + "px";
-                petalo3.style.height = alturaTulipan * 0.4 + "px";
-                petalo3.style.left = "27px";
+                petalo3.style.left = "25px";
                 petalo3.style.transform = "rotate(15deg)";
                 
                 let tallo = document.createElement("div");
                 tallo.className = "tallo";
-                tallo.style.width = tamanoTulipan * 0.1 + "px";
-                tallo.style.height = alturaTulipan * 0.6 + "px";
-                tallo.style.left = "27px";
+                tallo.style.left = "17px";
+                tallo.style.top = "50px";
                 
                 tulipan.appendChild(petalo1);
                 tulipan.appendChild(petalo2);
