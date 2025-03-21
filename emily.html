@@ -64,11 +64,9 @@
         
         .tulipan {
             position: relative;
-            width: 60px;
-            height: 100px;
             opacity: 0;
             animation: crecer 6s forwards, brisa 3s infinite alternate ease-in-out;
-            margin: 5px;
+            margin: 10px;
         }
         
         @keyframes crecer {
@@ -84,8 +82,6 @@
         
         .petalo {
             position: absolute;
-            width: 25px;
-            height: 40px;
             background: #ffcc00;
             border-radius: 50% 50% 0 0;
             top: 0;
@@ -94,10 +90,7 @@
         
         .tallo {
             position: absolute;
-            width: 6px;
-            height: 60px;
             background: green;
-            left: 27px;
             top: 40px;
         }
         
@@ -113,20 +106,6 @@
             color: #333;
             text-align: center;
         }
-        
-        @media (max-width: 600px) {
-            .text-container {
-                width: 90%;
-                padding: 20px;
-            }
-            .field {
-                padding-bottom: 5vh;
-            }
-            .tulipan {
-                width: 40px;
-                height: 80px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -139,19 +118,60 @@
         <p>Un campo de tulipanes para recordarte lo especial que eres.</p>
     </div>
     
-    <div class="field">
-        <script>
-            for (let i = 0; i < 80; i++) {
-                document.write(`
-                    <div class="tulipan" style="animation-delay: ${Math.random() * 3}s;">
-                        <div class="petalo" style="left: 3px; transform: rotate(-15deg);"></div>
-                        <div class="petalo" style="left: 15px;"></div>
-                        <div class="petalo" style="left: 27px; transform: rotate(15deg);"></div>
-                        <div class="tallo"></div>
-                    </div>
-                `);
+    <div class="field" id="field"></div>
+    
+    <script>
+        function crearTulipanes() {
+            let field = document.getElementById("field");
+            field.innerHTML = ""; // Limpiar antes de agregar nuevos
+            let esMovil = window.innerWidth <= 600;
+            let cantidadTulipanes = esMovil ? 30 : 80;
+            let tamanoTulipan = esMovil ? 50 : 60;
+            let alturaTulipan = esMovil ? 90 : 100;
+            
+            for (let i = 0; i < cantidadTulipanes; i++) {
+                let tulipan = document.createElement("div");
+                tulipan.className = "tulipan";
+                tulipan.style.width = tamanoTulipan + "px";
+                tulipan.style.height = alturaTulipan + "px";
+                tulipan.style.animationDelay = Math.random() * 3 + "s";
+                
+                let petalo1 = document.createElement("div");
+                petalo1.className = "petalo";
+                petalo1.style.width = tamanoTulipan * 0.4 + "px";
+                petalo1.style.height = alturaTulipan * 0.4 + "px";
+                petalo1.style.left = "3px";
+                petalo1.style.transform = "rotate(-15deg)";
+                
+                let petalo2 = document.createElement("div");
+                petalo2.className = "petalo";
+                petalo2.style.width = tamanoTulipan * 0.4 + "px";
+                petalo2.style.height = alturaTulipan * 0.4 + "px";
+                petalo2.style.left = "15px";
+                
+                let petalo3 = document.createElement("div");
+                petalo3.className = "petalo";
+                petalo3.style.width = tamanoTulipan * 0.4 + "px";
+                petalo3.style.height = alturaTulipan * 0.4 + "px";
+                petalo3.style.left = "27px";
+                petalo3.style.transform = "rotate(15deg)";
+                
+                let tallo = document.createElement("div");
+                tallo.className = "tallo";
+                tallo.style.width = tamanoTulipan * 0.1 + "px";
+                tallo.style.height = alturaTulipan * 0.6 + "px";
+                tallo.style.left = "27px";
+                
+                tulipan.appendChild(petalo1);
+                tulipan.appendChild(petalo2);
+                tulipan.appendChild(petalo3);
+                tulipan.appendChild(tallo);
+                field.appendChild(tulipan);
             }
-        </script>
-    </div>
+        }
+        
+        window.onload = crearTulipanes;
+        window.onresize = crearTulipanes;
+    </script>
 </body>
 </html>
