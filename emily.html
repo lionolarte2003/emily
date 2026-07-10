@@ -48,14 +48,14 @@
         .btn-start:hover {
             transform: scale(1.1);
             box-shadow: 0 0 40px rgba(177, 156, 217, 0.9);
-            animation: none; /* Se detiene el palpitar al pasar el mouse */
+            animation: none;
         }
 
         /* Contenedor principal (Oculto al inicio) */
         .main-container {
             position: relative;
             z-index: 10;
-            display: none; /* Se activa con Javascript */
+            display: none; 
             flex-direction: column;
             align-items: center;
             padding: 50px 20px;
@@ -149,7 +149,7 @@
 
     <!-- PANTALLA DE INICIO -->
     <div id="welcome-screen">
-        <button class="btn-start" id="start-btn">Abrir Regalo 💜</button>
+        <button class="btn-start" id="start-btn">Abrir Regalo para Emily 💜</button>
     </div>
 
     <!-- Script de fondo y lógica de video -->
@@ -191,27 +191,31 @@
                     mainContainer.style.display = 'flex';
                 }, 800);
 
-                // Configurar el "Observador" para el video
-                // Esto detecta cuando el video entra en la pantalla
+                // Configurar el "Observador" para reproducir la primera vez que se ve
                 const observerOptions = {
                     root: null,
                     rootMargin: '0px',
-                    threshold: 0.5 // Se activa cuando al menos el 50% del video es visible
+                    threshold: 0.5 
                 };
 
                 const videoObserver = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            // Cuando se ve, se reproduce (ya tiene el sonido activado porque el atributo 'muted' fue eliminado)
                             btsVideo.play();
-                        } else {
-                            // Opcional: Si quieres que se pause al seguir bajando, descomenta la siguiente línea
-                            // btsVideo.pause();
+                            // Detenemos el observador para que no vuelva a auto-reproducirse si ella hace scroll arriba y abajo
+                            videoObserver.unobserve(btsVideo);
                         }
                     });
                 }, observerOptions);
 
                 videoObserver.observe(btsVideo);
+            });
+
+            // 3. NUEVO: Pausar si sale de la página o cambia de pestaña
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden) {
+                    btsVideo.pause(); // Se detiene al salir
+                }
             });
         });
     </script>
@@ -234,7 +238,6 @@
             <p style="margin-bottom: 20px;">Un pequeño viaje visual por la historia de quienes te inspiran a no rendirte:</p>
             
             <div class="video-container">
-                <!-- Nota: Quité el atributo 'autoplay' y 'muted' -->
                 <video id="bts-video" loop controls playsinline>
                     <source src="historia.mp4" type="video/mp4">
                     Tu navegador no soporta la reproducción de video.
