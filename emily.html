@@ -16,11 +16,46 @@
             min-height: 100vh;
         }
 
-        /* Contenedor principal */
+        /* Pantalla de bienvenida (Para permitir el audio del video) */
+        #welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #2b1055 0%, #0d0a20 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #b19cd9, #d8b4e2);
+            color: #1a0b2e;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.5em;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 25px rgba(177, 156, 217, 0.6);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: palpitar 2s infinite;
+        }
+
+        .btn-start:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 40px rgba(177, 156, 217, 0.9);
+            animation: none; /* Se detiene el palpitar al pasar el mouse */
+        }
+
+        /* Contenedor principal (Oculto al inicio) */
         .main-container {
             position: relative;
             z-index: 10;
-            display: flex;
+            display: none; /* Se activa con Javascript */
             flex-direction: column;
             align-items: center;
             padding: 50px 20px;
@@ -28,7 +63,7 @@
             margin: 0 auto;
         }
 
-        /* Efecto Glassmorphism (Cristal moderno) */
+        /* Efecto Glassmorphism */
         .glass-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(12px);
@@ -45,10 +80,9 @@
             animation: fadeUp 1.5s forwards ease-out;
         }
 
-        /* Retrasos para que las tarjetas aparezcan una por una */
-        .delay-1 { animation-delay: 0.5s; }
-        .delay-2 { animation-delay: 1.5s; }
-        .delay-3 { animation-delay: 2.5s; }
+        .delay-1 { animation-delay: 0.3s; }
+        .delay-2 { animation-delay: 1.0s; }
+        .delay-3 { animation-delay: 1.7s; }
 
         h1 {
             font-size: 3em;
@@ -68,7 +102,7 @@
         .highlight { color: #d8b4e2; font-weight: bold; font-style: italic; }
         .jimin { color: #ffb6c1; font-weight: bold; text-shadow: 0 0 10px rgba(255,182,193,0.5); }
         
-        /* Contenedor del video local */
+        /* Contenedor del video */
         .video-container {
             width: 100%;
             border-radius: 15px;
@@ -83,12 +117,18 @@
             display: block;
         }
 
-        /* Animación de entrada de las tarjetas */
+        /* Animaciones */
         @keyframes fadeUp {
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Partículas flotantes (Corazones y Estrellas) */
+        @keyframes palpitar {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Partículas flotantes */
         .particle {
             position: fixed;
             top: -10vh;
@@ -101,67 +141,101 @@
         }
 
         @keyframes fall {
-            to {
-                transform: translateY(110vh) rotate(360deg);
-            }
+            to { transform: translateY(110vh) rotate(360deg); }
         }
     </style>
 </head>
 <body>
 
-    <!-- El script genera estrellas y corazones cayendo de fondo -->
+    <!-- PANTALLA DE INICIO -->
+    <div id="welcome-screen">
+        <button class="btn-start" id="start-btn">Abrir Regalo 💜</button>
+    </div>
+
+    <!-- Script de fondo y lógica de video -->
     <script>
+        // 1. Generador de estrellas y corazones
         function createParticle() {
             const particle = document.createElement('div');
             particle.classList.add('particle');
             
-            // Alternar entre corazones morados y brillos
             const array = ['💜', '✨', '⭐', '🌌'];
             particle.innerText = array[Math.floor(Math.random() * array.length)];
             
-            // Posición aleatoria en la pantalla
             particle.style.left = Math.random() * 100 + 'vw';
-            
-            // Tamaño aleatorio
             particle.style.fontSize = (Math.random() * 1.5 + 0.5) + 'em';
-            
-            // Duración aleatoria de la caída
             particle.style.animationDuration = (Math.random() * 5 + 5) + 's';
             
             document.body.appendChild(particle);
 
-            // Eliminar la partícula cuando sale de la pantalla
             setTimeout(() => {
                 particle.remove();
             }, 10000);
         }
-
-        // Crear una nueva partícula cada 300 milisegundos
         setInterval(createParticle, 300);
+
+        // 2. Lógica del Botón y Reproducción del Video
+        document.addEventListener('DOMContentLoaded', () => {
+            const startBtn = document.getElementById('start-btn');
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const mainContainer = document.querySelector('.main-container');
+            const btsVideo = document.getElementById('bts-video');
+
+            startBtn.addEventListener('click', () => {
+                // Ocultar pantalla de bienvenida
+                welcomeScreen.style.opacity = '0';
+                setTimeout(() => {
+                    welcomeScreen.style.visibility = 'hidden';
+                    welcomeScreen.style.display = 'none';
+                    // Mostrar el contenido principal
+                    mainContainer.style.display = 'flex';
+                }, 800);
+
+                // Configurar el "Observador" para el video
+                // Esto detecta cuando el video entra en la pantalla
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '0px',
+                    threshold: 0.5 // Se activa cuando al menos el 50% del video es visible
+                };
+
+                const videoObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            // Cuando se ve, se reproduce (ya tiene el sonido activado porque el atributo 'muted' fue eliminado)
+                            btsVideo.play();
+                        } else {
+                            // Opcional: Si quieres que se pause al seguir bajando, descomenta la siguiente línea
+                            // btsVideo.pause();
+                        }
+                    });
+                }, observerOptions);
+
+                videoObserver.observe(btsVideo);
+            });
+        });
     </script>
 
+    <!-- CONTENIDO PRINCIPAL -->
     <div class="main-container">
         
-        <!-- Tarjeta 1: Título -->
         <div class="glass-card delay-1">
             <h1>Feliz 9 de Julio, Emily</h1>
-            <p>Hoy es el Día de ARMY, una fecha muy especial. Quería crear algo moderno, dinámico y único, a la altura de lo que tú y tu universo significan para mí.</p>
+            <p>Hoy es el Día de ARMY. Quería crear algo único para ti en esta fecha especial, porque alguien que brilla tanto merece su propio espacio.</p>
         </div>
 
-        <!-- Tarjeta 2: Mensaje y Jimin -->
         <div class="glass-card delay-2">
-            <p>Conozco la inspiración y la fuerza que te transmiten esos siete chicos. Así como ellos son tu refugio, tú eres mi propia <span class="highlight">Magic Shop</span> y la estrella más brillante de mi <span class="highlight">Mikrokosmos</span>.</p>
-            <p>Sé lo mucho que admiras a Jimin, y así como su luz especial te hace sonreír todos los días, para mí, mi hermosa coincidencia, mi <span class="jimin">Serendipity</span>... eres totalmente tú.</p>
+            <p>Sé cuánto te esfuerzas todos los días estudiando. Entre tantos planos, trabajos, parciales y los retos que demanda nuestra carrera, admiro profundamente la dedicación con la que estás construyendo tu futuro como ingeniera, la mejor ingeniera que va existir.</p>
+            <p>A veces los ciclos son pesados, pero sé que encuentras tu fuerza y tu refugio en esos siete chicos. Así como ellos son tu lugar seguro, tú eres mi propia <span class="highlight">Magic Shop</span> y la estrella más firme de mi <span class="highlight">Mikrokosmos</span>.</p>
+            <p>Conozco lo mucho que admiras a Jimin, y así como él tiene esa luz cálida que te anima a seguir, para mí, mi <span class="jimin">Serendipity</span> en medio de todo esto... eres tú.</p>
         </div>
 
-        <!-- Tarjeta 3: Video Autoreproducible -->
         <div class="glass-card delay-3">
-            <p style="margin-bottom: 20px;">Un pequeño viaje visual por la historia de quienes te hacen tan feliz:</p>
+            <p style="margin-bottom: 20px;">Un pequeño viaje visual por la historia de quienes te inspiran a no rendirte:</p>
             
             <div class="video-container">
-                <!-- Etiqueta de video HTML5 configurada para reproducir un archivo local automáticamente -->
-                <!-- Asegúrate de tener el archivo historia.mp4 en la misma carpeta que este HTML -->
-                <video autoplay loop muted controls playsinline>
+                <!-- Nota: Quité el atributo 'autoplay' y 'muted' -->
+                <video id="bts-video" loop controls playsinline>
                     <source src="historia.mp4" type="video/mp4">
                     Tu navegador no soporta la reproducción de video.
                 </video>
